@@ -1,20 +1,27 @@
-# On importe la classe Flask depuis la bibliothèque qu'on a installée
 from flask import Flask
+# On importe notre fichier db pour déclencher la connexion
+import db
 
-# On crée l'instance de l'application.
-# __name__ permet à Flask de savoir où il se trouve pour trouver les dossiers (templates, static).
 app = Flask(__name__)
 
-# Ce décorateur dit à Flask : "Si quelqu'un visite l'adresse '/', exécute la fonction home()"
 @app.route('/')
 def home():
-    # On retourne une simple chaîne de caractères pour tester
-    return "CinéLoop Python - Le serveur tourne !"
+    # On récupère une connexion au pool
+    conn = db.get_connection()
+    try:
+        # On crée un curseur (c'est l'équivalent de pool.query en Node)
+        cur = conn.cursor()
+        # On exécute une requête simple
+        cur.execute("SELECT COUNT(*) FROM film;")
+        # On récupère le résultat
+        nombre_films = cur.fetchone()[0]
+        cur.close()
+        return f"CinéLoop Python - Le serveur tourne ! Il y a {nombre_films} films en base."
+    except Exception as e:
+        return f"Erreur SQL : {e}"
+    finally:
+        # On rend TOUJOURS la connexion au pool, même en cas d'erreur
+        db.release_connection(conn)
 
-# Cette condition vérifie si on lance le fichier directement (python app.py)
-# Si le fichier est importé par un autre, ce bloc ne s'exécute pas.
 if __name__ == '__main__':
-    # On démarre le serveur.
-    # debug=True active le rechargement automatique (comme nodemon) et les messages d'erreur détaillés.
-    # a desactiver en prod
     app.run(debug=True)
