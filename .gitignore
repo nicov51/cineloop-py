@@ -1,0 +1,13 @@
+# Environnement virtuel Python
+venv/
+__pycache__/
+*.pyc
+
+# Variables d'environnement (secrets)
+.env
+
+# Fichiers de l'IDE (WebStorm)
+.idea/
+
+# Logs
+*.log
