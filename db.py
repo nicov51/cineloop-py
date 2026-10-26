@@ -21,7 +21,7 @@ try:
         print("Connecté à PostgreSQL")
 except Exception as e:
     print(f"Erreur de connexion à PostgreSQL : {e}")
-    # force l'arrêt et affiche l'erreur exacte dans la console
+    # force l'arrêt et affiche l'erreur dans la console
     raise e
 
 # Fonction utilitaire pour récupérer une connexion

@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: cineloop-py-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cineloop_user
+      POSTGRES_PASSWORD: cineloop_password
+      POSTGRES_DB: cineloop_python
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data_py:/var/lib/postgresql/data
+
+volumes:
+  db_data_py:
